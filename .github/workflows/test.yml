@@ -1,41 +1,41 @@
 name: Run Click Issue 2614 Tests
 
 on:
-workflow_dispatch:
-push:
-branches: [“main”]
+  workflow_dispatch:
+  push:
+    branches: ["main"]
 
 jobs:
-test:
-runs-on: ubuntu-latest
-strategy:
-fail-fast: false
-matrix:
-python-version: [“3.11”, “3.12”, “3.13”]
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
 
-steps:
-  - uses: actions/checkout@v4
-  - uses: actions/setup-python@v5
-    with:
-      python-version: ${{ matrix.python-version }}
-  - name: Unpack patched Click repo
-    run: |
-      unzip -q click_issue_2614_patched_repo.zip -d click-src
-  - name: Install package and test dependencies
-    working-directory: click-src
-    run: |
-      python -m pip install --upgrade pip
-      python -m pip install -e .
-      python -m pip install pytest
-  - name: Run issue regression
-    working-directory: click-src
-    run: |
-      python -m pytest tests/test_zero_one_issue_2614.py -q --tb=short --disable-warnings
-  - name: Run related regression tests
-    working-directory: click-src
-    run: |
-      python -m pytest tests/test_shell_completion.py tests/test_options.py -q --tb=short --disable-warnings
-  - name: Run full test suite
-    working-directory: click-src
-    run: |
-      python -m pytest tests -q --tb=short --disable-warnings
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unpack patched Click repo
+        run: |
+          unzip -q click_issue_2614_patched_repo.zip -d click-src
+      - name: Install package and test dependencies
+        working-directory: click-src
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install pytest
+      - name: Run issue regression
+        working-directory: click-src
+        run: |
+          python -m pytest tests/test_zero_one_issue_2614.py -q --tb=short --disable-warnings
+      - name: Run related regression tests
+        working-directory: click-src
+        run: |
+          python -m pytest tests/test_shell_completion.py tests/test_options.py -q --tb=short --disable-warnings
+      - name: Run full test suite
+        working-directory: click-src
+        run: |
+          python -m pytest tests -q --tb=short --disable-warnings
